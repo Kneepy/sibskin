@@ -1,4 +1,4 @@
-@import "../../shared/styles/theme.scss";
+@use "../../shared/styles/theme.scss" as *;
 
 .page-selector {
     position: absolute;
