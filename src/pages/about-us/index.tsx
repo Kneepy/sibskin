@@ -3,11 +3,11 @@ import { imageArray } from "../../shared/utils/images";
 
 export const AboutUs = () => {
     const transformStyles = [
-        "rotate(7deg) translate(-400px)",
-        "rotate(0deg) translate(-200px)",
+        "rotate(7deg)",
+        "rotate(0deg)",
         "rotate(-10deg)",
-        "rotate(10deg) translate(200px)",
-        "rotate(-5deg) translate(350px)"
+        "rotate(10deg)",
+        "rotate(-5deg)"
     ];
 
     return (
@@ -20,9 +20,9 @@ export const AboutUs = () => {
                 {
                     imageArray.map((ref, i) =>
                         <div className="card" style={{
-                            backgroundImage: `${ref}`,
+                            backgroundImage: `url(${ref})`,
                             transform: transformStyles[i] ?? "none"
-                        }}>{ref}</div>
+                        }}></div>
                     )
                 }
             </div>

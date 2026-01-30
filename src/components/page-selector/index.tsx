@@ -1,13 +1,17 @@
 import "./index.scss"
 import { ROUTES } from "../../shared/constants/routes";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { pathToRouteMap } from "../../shared/utils/router";
 
-export const PageSelector = () => {
-    const scrollThreshold = 20
+interface Props {
+    touchContainer?: React.Ref<HTMLDivElement>
+}
+
+export const PageSelector = ({ touchContainer = null }: Props) => {
+    const scrollThreshold = 3
     const [isScrolling, setIsScrolling] = useState(false)
-    const navigate = useNavigate();
+    const navigate = useNavigate()
     const location = useLocation()
     const totalPages = Object.values(ROUTES)
     const currentRoute = pathToRouteMap(location.pathname)
@@ -56,6 +60,43 @@ export const PageSelector = () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
     }, [handleWheel]);
+
+    useEffect(() => {
+        // if (!containerRef.current) return;
+
+        let touchStartY = 0;
+        const touchThreshold = 20;
+
+        const handleTouchStart = (e: TouchEvent) => {
+            touchStartY = e.touches[0].clientY;
+        };
+
+        const handleTouchEnd = (e: TouchEvent) => {
+            if (isScrolling) return;
+
+            const touchEndY = e.changedTouches[0].clientY;
+            const diff = touchStartY - touchEndY;
+
+            if (Math.abs(diff) > touchThreshold) {
+                if (diff > 0) {
+                    // Свайп вверх
+                    navigateToPage(Math.min(currentPageIndex + 1, totalPages.length - 1));
+                } else {
+                    // Свайп вниз
+                    navigateToPage(Math.max(currentPageIndex - 1, 0));
+                }
+            }
+        };
+
+        const container = document;
+        container.addEventListener('touchstart', handleTouchStart);
+        container.addEventListener('touchend', handleTouchEnd);
+
+        return () => {
+            container.removeEventListener('touchstart', handleTouchStart);
+            container.removeEventListener('touchend', handleTouchEnd);
+        };
+    }, [currentPageIndex, totalPages, isScrolling, navigateToPage]);
 
     return (
         <div className="page-selector">

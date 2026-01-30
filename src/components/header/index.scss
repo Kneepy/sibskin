@@ -32,6 +32,7 @@ header {
             opacity: .6;
             height: 100%;
             padding: 10px;
+            text-align: center;
             position: relative;
             text-decoration: none;
             &:hover {
@@ -52,4 +53,8 @@ header {
             }
         }
     }
+}
+
+@media (max-width: 431px) {
+
 }

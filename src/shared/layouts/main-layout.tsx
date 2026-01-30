@@ -9,6 +9,7 @@ import { pathToRouteMap } from "../utils/router";
 export const MainLayout = () => {
     const location = useLocation();
     const previousRouteRef = useRef<ROUTES | null>(null);
+    const touchContainerRef = useRef<HTMLDivElement>(null);
 
     const currentRoute = pathToRouteMap(location.pathname);
 
@@ -26,11 +27,10 @@ export const MainLayout = () => {
         return 1;
     }, [currentRoute]);
 
-    console.log("v")
     return (
         <div className="page">
             <Header />
-            <AnimatePresence initial={false} mode="wait">
+            <AnimatePresence initial={false} mode="popLayout">
                 <motion.div
                     initial={{ opacity: 0, y: direction * 20 }}
                     animate={{
@@ -38,13 +38,15 @@ export const MainLayout = () => {
                         y: 0,
                         transition: {
                             type: "spring",
-                            duration: 1,
+                            duration: .8,
                         },
                     }}
                     key={location.pathname}
-                    style={{ display: "flex", flexDirection: "column", flex: 1 }}
+                    style={{ flex: 1, position: "relative" }}
                 >
-                    <Outlet />
+                    <div style={{ display: "flex", flexDirection: "column", flex: 1, position: "absolute", width: "100%", height: "100%" }}>
+                        <Outlet />
+                    </div>
                 </motion.div>
             </AnimatePresence>
             <PageSelector />

@@ -2,7 +2,7 @@ import "./index.scss"
 import previewImage from "../../assets/preview.png"
 
 export const Product = () => {
-    const previewImageStyle = { backgroundImage: `url('${previewImage}')` }
+    const previewImageStyle = { backgroundImage: `url(${previewImage})` }
 
     return (
         <div className="product">

@@ -43,3 +43,52 @@
         height: 80%;
     }
 }
+
+@media (max-width: 1024px) {
+    .product {
+        flex-direction: column-reverse !important;
+        align-items: initial !important;
+        justify-content: center !important;
+
+        .preview {
+            flex: .4;
+            background-size: cover !important;
+        }
+        .label {
+            justify-content: center;
+            text-align: center;
+
+            .title {
+                margin-bottom: 40px;
+            }
+            span {
+                font-size: 20px;
+            }
+            button {
+                width: 100%;
+                height: 60px;
+                font-size: 25px;
+                margin-top: 40px;
+            }
+        }
+    }
+}
+
+@media (max-width: 431px) {
+    .product {
+        .label {
+            .title {
+                margin-bottom: 20px;
+                font-size: 20px;
+            }
+            span {
+                font-size: 18px;
+            }
+            button {
+                height: 40px;
+                font-size: 20px;
+                margin-top: 20px;
+            }
+        }
+    }
+}

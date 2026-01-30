@@ -35,3 +35,13 @@
         }
     }
 }
+
+@media (max-width: 1024px) {
+    .buy {
+        width: 90%;
+
+        .partner {
+            flex: 0 0 calc(50% - (20px * 2 / 3)) !important;
+        }
+    }
+}
