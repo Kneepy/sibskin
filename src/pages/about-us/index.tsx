@@ -1,13 +1,7 @@
 import "./index.scss"
+import { imageArray } from "../../shared/utils/images";
 
 export const AboutUs = () => {
-    const refsImages = [
-        "C9lW3sFNqnWg15aSUzs55lk2VcKQzHS1naufAlbZpTv2c5W-Q6JrtM1SdrKDDRmbrtrWFB5mZmWnIRFiAs_xeEnS.jpg",
-        "iV-Z89_kMiReiTMpzT_epWXOgURSzekTqWKl4_YJyllacI9-Pz2q9WWk3cEXQSOi1zaU3o0XQ1qpbpTP8peO5T7p.jpg",
-        "JIdxt5LdtvSC66d7J_FwgAuai12Xp0KPS-PmXOqBet3fXCPQOHuSqK0UGi-nKfh5Ih7DDH0ynwq40kSHtb6Xqq0P.jpg",
-        "6OgMklQWXwAiz5uc23UCWKyu9dobCwx9fB2nF1jfR8beJKXXZLUTPKKhI3X1vSgQnEm0mhlncrLvvBtaRK2NyRzr (1).jpg",
-        "V7jhQbYGZW1EPhfqG_gduhxGgQS7AJ68DYxQ3oDVZ6bfv79550Ag3iXVoDjFhtXZn4ofiNddcmTwLaUcQBvhKbVU.jpg"
-    ]
     const transformStyles = [
         "rotate(7deg) translate(-400px)",
         "rotate(0deg) translate(-200px)",
@@ -24,11 +18,11 @@ export const AboutUs = () => {
             </div>
             <div className="cards">
                 {
-                    refsImages.map((ref, i) =>
+                    imageArray.map((ref, i) =>
                         <div className="card" style={{
-                            backgroundImage: `url('${ref}')`,
+                            backgroundImage: `${ref}`,
                             transform: transformStyles[i] ?? "none"
-                        }}></div>
+                        }}>{ref}</div>
                     )
                 }
             </div>

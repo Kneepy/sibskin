@@ -1,6 +1,6 @@
 import "./index.scss"
 import { ROUTES } from "../../shared/constants/routes";
-import React, { ReactNode, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { pathToRouteMap } from "../../shared/utils/router";
 
@@ -36,13 +36,24 @@ export const PageSelector = () => {
         }
     }, [currentPageIndex, totalPages.length, navigateToPage, isScrolling, scrollThreshold]);
 
+    const handleKeyDown = useCallback((e: KeyboardEvent) => {
+        e.preventDefault();
+
+        if (e.key === "ArrowDown") {
+            navigateToPage(Math.min(currentPageIndex + 1, totalPages.length - 1));
+        } else if (e.key === "ArrowUp") {
+            navigateToPage(Math.max(currentPageIndex - 1, 0))
+        }
+
+    }, [currentPageIndex, totalPages.length, navigateToPage])
+
     useEffect(() => {
         window.addEventListener('wheel', handleWheel, { passive: false });
-        // window.addEventListener('keydown', handleKeyDown);
+        window.addEventListener('keydown', handleKeyDown);
 
         return () => {
             window.removeEventListener('wheel', handleWheel);
-            // window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('keydown', handleKeyDown);
         };
     }, [handleWheel]);
 

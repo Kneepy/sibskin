@@ -1,0 +1,55 @@
+name: K3S Frontend Deployment
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+  DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+  IMAGE_NAME: sibskin-image
+  DEPLOYMENT_NAME: sibskin-front-deployment
+  CONTAINER_NAME: sibskin-front-container
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Build and deploy Docker image
+        run: |
+          IMAGE_TAG="${{ env.IMAGE_NAME }}:${{ github.sha }}"
+          
+          docker build -t $IMAGE_TAG .
+          
+          docker save $IMAGE_TAG | gzip > /tmp/image.tar.gz
+          scp -o StrictHostKeyChecking=no /tmp/image.tar.gz ${{ env.DEPLOY_USER }}@${{ env.DEPLOY_HOST }}:/tmp/image.tar.gz
+          
+          ssh -o StrictHostKeyChecking=no ${{ env.DEPLOY_USER }}@${{ env.DEPLOY_HOST }} "
+            gunzip -c /tmp/image.tar.gz | sudo k3s ctr images import -
+            kubectl set image deployment/${{ env.DEPLOYMENT_NAME }} ${{ env.CONTAINER_NAME }}=$IMAGE_TAG
+            kubectl rollout status deployment/${{ env.DEPLOYMENT_NAME }} --timeout=120s
+            kubectl get pods -l app=sibskin-front
+            rm /tmp/image.tar.gz
+          "
